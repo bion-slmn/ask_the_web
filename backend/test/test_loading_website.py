@@ -2,7 +2,6 @@ import pytest
 from langchain.schema import Document
 from load_scrape_website import (
     search_duckduckgo,
-    load_website_content,
     get_reduced_text,
     split_content
 )

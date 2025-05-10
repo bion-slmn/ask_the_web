@@ -1,7 +1,11 @@
-from nodes import (State, get_links, scrape_web_data, 
+from .nodes import (State, get_links, scrape_web_data, 
                    generate_answer, send_to_scrape_data,
                      verify_citations)
 from langgraph.graph import START, StateGraph
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 
 def generate_graph() -> StateGraph:
@@ -22,6 +26,11 @@ def generate_graph() -> StateGraph:
     Returns:
         StateGraph: A compiled LangGraph StateGraph object that defines the complete processing workflow.
     """
+    os.environ["LANGSMITH_API_KEY"] = os.getenv("LANGSMITH_API_KEY", "")
+    os.environ["LANGSMITH_TRACING"] = "true"
+    os.environ["LANGCHAIN_PROJECT"] = "Web Assistant QA"
+
+
     graph_builder = StateGraph(State)
     graph_builder.add_node(get_links)
     graph_builder.add_node(scrape_web_data)

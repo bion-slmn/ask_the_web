@@ -1,0 +1,11 @@
+# Ignore Python virtual environments
+myvenv/
+venv/
+
+# Ignore Streamlit config/cache
+.streamlit/
+.env
+*.pyc
+__pycache__/
+
+

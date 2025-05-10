@@ -3,14 +3,9 @@ from langchain_community.document_loaders import WebBaseLoader
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain.schema import Document
 from langchain_community.tools import DuckDuckGoSearchResults
-from clean_data import clean_text
+from .clean_data import clean_text
 
 
-api_wrapper = DuckDuckGoSearchAPIWrapper(
-    region="us-en",     # or "de-de", etc.
-    time="d",           # results from the last day
-    max_results=2
-)
 
 
 
@@ -22,12 +17,11 @@ def search_duckduckgo(query: str) -> list[str]:
         query (str): The search query.
 
     Returns:
-        list[str]: A list of URLs from the search results.
+        list[str]: A list from the search results.
     """
-    search = DuckDuckGoSearchResults(api_wrapper=api_wrapper, output_format='list')
+    search = DuckDuckGoSearchResults(output_format='list')
     results = search.invoke(query)
-    links = [link['link'] for link in results if 'link' in link]
-    return links[:2]
+    return results[:3]  # Return the first 3 results
 
 
 def load_website_content(link: str) -> list[Document]:
@@ -54,7 +48,7 @@ def get_reduced_text(doc: Document) -> str:
         str: The reduced text.
     """
     full_text = doc.page_content
-    half_length = len(full_text) // 2
+    half_length = int(len(full_text) * 0.2)
     reducecd_doc = full_text[:half_length]
     return clean_text(reducecd_doc)
 

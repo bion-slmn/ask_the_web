@@ -1,10 +1,10 @@
 from typing import List, Annotated, Tuple
 from operator import add
 from typing_extensions import TypedDict
-from load_llm import load_llm
-from load_scrape_website import load_website_content, split_content
-from prompts import GENERATE_RESULT_PROMPT, VERIFY_PROMPT
-from load_scrape_website import search_duckduckgo
+from .load_llm import load_llm
+from .load_scrape_website import load_website_content, split_content
+from .prompts import GENERATE_RESULT_PROMPT, VERIFY_PROMPT
+from .load_scrape_website import search_duckduckgo
 from langgraph.types import Send
 
 
@@ -49,6 +49,7 @@ class State(TypedDict):
     """
     question: str
     links: List[str]
+    raw_results: List[dict]
     context: Annotated[list, add]
     answer: AnswerWithSources
     status: CitationStatus
@@ -73,8 +74,9 @@ def get_links(state: State) -> dict:
     Returns:
         dict: A dictionary containing the retrieved links.
     """
-    links = search_duckduckgo(state["question"])
-    return {"links": links}
+    results = search_duckduckgo(state["question"])
+    links = [link['link'] for link in results if 'link' in link]
+    return {"links": links, 'raw_results': results}
 
 def send_to_scrape_data(state: State) -> list:
     """
@@ -97,7 +99,6 @@ def scrape_web_data(state: WebState) ->dict:
     Returns:
         dict: A dictionary containing the retrieved context documents.
   """
-  print(f"Scraping {state['link']}", '--'*20)
   docs = load_website_content(state["link"])
   retrieved_docs = split_content(docs)
   return {"context": retrieved_docs}
@@ -131,7 +132,7 @@ def verify_citations(state: State) -> dict:
             - 'status' (str): Either 'PASS' or 'FAIL', indicating whether the 
               citations were deemed appropriate according to the source content.
     """
-    prompt = VERIFY_PROMPT.format(citations=state['answer'], content=state['context'])
+    prompt = VERIFY_PROMPT.format(citations=state['answer'], content=state['raw_results'])
     structured_llm = llm.with_structured_output(CitationStatus)
     response = structured_llm.invoke(prompt)
     return {"status": response["status"]}
