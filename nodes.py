@@ -1,9 +1,12 @@
 from typing import List, Annotated, Tuple
-from langchain_core.documents import Document
+from operator import add
 from typing_extensions import TypedDict
 from load_llm import load_llm
 from load_scrape_website import load_website_content, split_content
 from prompts import GENERATE_RESULT_PROMPT, VERIFY_PROMPT
+from load_scrape_website import search_duckduckgo
+from langgraph.types import Send
+
 
 
 # Load the language model and prompt template
@@ -45,13 +48,47 @@ class State(TypedDict):
         answer (AnswerWithSources): The final answer including source citations.
     """
     question: str
-    context: List[Document]
+    links: List[str]
+    context: Annotated[list, add]
     answer: AnswerWithSources
     status: CitationStatus
 
 
-def retrieve(state: State) -> dict:
+class WebState(TypedDict):
     """
+    A dictionary representing the state of a web document retrieval process.
+
+    Attributes:
+        link (str): The URL of the web page to retrieve or process.
+    """
+    link: str
+
+def get_links(state: State) -> dict:
+    """
+    Retrieve links based on the question.
+
+    Args:
+        state (State): The current state of the graph.
+
+    Returns:
+        dict: A dictionary containing the retrieved links.
+    """
+    links = search_duckduckgo(state["question"])
+    return {"links": links}
+
+def send_to_scrape_data(state: State) -> list:
+    """
+    Send the links to be scraped.
+
+    Args:
+        state (State): The current state of the graph.
+
+    """
+    return [Send("scrape_web_data", {"link": s}) for s in state['links']]
+
+
+def scrape_web_data(state: WebState) ->dict:
+  """
     Retrieve relevant documents based on the question.
 
     Args:
@@ -59,13 +96,14 @@ def retrieve(state: State) -> dict:
 
     Returns:
         dict: A dictionary containing the retrieved context documents.
-    """
-    docs = load_website_content(state["question"])
-    retrieved_docs = split_content(docs)
-    return {"context": retrieved_docs}
+  """
+  print(f"Scraping {state['link']}", '--'*20)
+  docs = load_website_content(state["link"])
+  retrieved_docs = split_content(docs)
+  return {"context": retrieved_docs}
 
 
-def generate(state: State) -> dict:
+def generate_answer(state: State) -> dict:
     """
     Generate an answer using the language model and retrieved context.
 
@@ -78,7 +116,6 @@ def generate(state: State) -> dict:
     formatted_prompt = GENERATE_RESULT_PROMPT.format(question=state["question"], context=state['context'])
     response = llm.invoke(formatted_prompt)
     return {"answer": response}
-
 
 def verify_citations(state: State) -> dict:
     """
@@ -97,6 +134,4 @@ def verify_citations(state: State) -> dict:
     prompt = VERIFY_PROMPT.format(citations=state['answer'], content=state['context'])
     structured_llm = llm.with_structured_output(CitationStatus)
     response = structured_llm.invoke(prompt)
-    print(response)
-    print('--' * 20)
     return {"status": response["status"]}

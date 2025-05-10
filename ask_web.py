@@ -9,6 +9,7 @@ from rich.markdown import Markdown
 load_dotenv()
 os.environ["LANGSMITH_API_KEY"] = os.getenv("LANGSMITH_API_KEY", "")
 os.environ["LANGSMITH_TRACING"] = "true"
+os.environ['USER_AGENT'] = os.getenv('USER_AGENT', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/')
 
 console = Console()
 
@@ -41,4 +42,4 @@ def ask_the_web(query: str) -> None:
         console.print("[yellow]No content found.[/yellow]")
 
 
-ask_the_web("What is the capital of France?")
+ask_the_web("tell me about france?")

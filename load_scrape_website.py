@@ -3,6 +3,7 @@ from langchain_community.document_loaders import WebBaseLoader
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain.schema import Document
 from langchain_community.tools import DuckDuckGoSearchResults
+from clean_data import clean_text
 
 
 api_wrapper = DuckDuckGoSearchAPIWrapper(
@@ -11,7 +12,7 @@ api_wrapper = DuckDuckGoSearchAPIWrapper(
     max_results=2
 )
 
-search = DuckDuckGoSearchResults(api_wrapper=api_wrapper, output_format='list')
+
 
 def search_duckduckgo(query: str) -> list[str]:
     """
@@ -23,27 +24,40 @@ def search_duckduckgo(query: str) -> list[str]:
     Returns:
         list[str]: A list of URLs from the search results.
     """
+    search = DuckDuckGoSearchResults(api_wrapper=api_wrapper, output_format='list')
     results = search.invoke(query)
     links = [link['link'] for link in results if 'link' in link]
     return links[:2]
 
 
-def load_website_content(query: str) -> list[Document]:
+def load_website_content(link: str) -> list[Document]:
     """
     Load website content from URLs returned by a DuckDuckGo search.
 
     Args:
-        query (str): The search query.
+        query (str): The link of the website to load.
 
     Returns:
         list[Document]: A list of LangChain Document objects containing page content.
     """
-    links = search_duckduckgo(query)
-    if not links:
-        raise ValueError("No links found from DuckDuckGo search.")
-
-    docs = WebBaseLoader(links).load()
+    docs = WebBaseLoader(link).load()
     return docs
+
+def get_reduced_text(doc: Document) -> str:
+    """
+    Extracts the first half of the document's text.
+
+    Args:
+        doc (Document): The original document.
+
+    Returns:
+        str: The reduced text.
+    """
+    full_text = doc.page_content
+    half_length = len(full_text) // 2
+    reducecd_doc = full_text[:half_length]
+    return clean_text(reducecd_doc)
+
 
 
 def split_content(docs: list[Document]) -> list[Document]:
@@ -60,10 +74,9 @@ def split_content(docs: list[Document]) -> list[Document]:
     all_chunks = []
     for doc in docs:
         try:
-            full_text = doc.page_content
-            half_lenght = (len(full_text)) // 2 
-            reduced_text = full_text[:half_lenght]   
+            reduced_text = get_reduced_text(doc)    
             chunks = splitter.split_text(reduced_text)
+            
             for chunk in chunks:
                 all_chunks.append(Document(page_content=chunk, metadata=doc.metadata))
         except Exception as e:
