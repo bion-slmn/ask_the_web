@@ -43,7 +43,7 @@ streamlit run app.py
 
 ## 🗺️ Architecture
 
-![Architecture Diagram]
+![The flow of the graph](image.png)
 
 
 ---
