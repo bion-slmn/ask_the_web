@@ -48,7 +48,7 @@ def get_reduced_text(doc: Document) -> str:
         str: The reduced text.
     """
     full_text = doc.page_content
-    half_length = int(len(full_text) * 0.2)
+    half_length = int(len(full_text) * 0.3)
     reducecd_doc = full_text[:half_length]
     return clean_text(reducecd_doc)
 

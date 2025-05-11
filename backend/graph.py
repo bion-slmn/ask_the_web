@@ -44,3 +44,5 @@ def generate_graph() -> StateGraph:
     graph_builder.add_edge('generate_answer', 'verify_citations')
     graph = graph_builder.compile()
     return graph
+
+
