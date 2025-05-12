@@ -1,7 +1,7 @@
 import re
 
 
-def merge_hyphenated_words(text):
+def merge_hyphenated_words(text: str) -> str:
     """
     Merges words that have been split across lines using a
     hyphen followed by a newline.
@@ -17,7 +17,7 @@ def merge_hyphenated_words(text):
     return re.sub(r"(\w)-\n(\w)", r"\1\2", text)
 
 
-def fix_newlines(text):
+def fix_newlines(text: str) -> str:
     """
     Replaces single newline characters with spaces to improve sentence flow,
     while preserving paragraph breaks (double newlines or more).
@@ -31,7 +31,7 @@ def fix_newlines(text):
     return re.sub(r"(?<!\n)\n(?!\n)", " ", text)
 
 
-def remove_multiple_newlines(text):
+def remove_multiple_newlines(text: str) -> str:
     """
     Reduces multiple consecutive newline characters to a single newline
     to normalize paragraph spacing.
@@ -45,7 +45,7 @@ def remove_multiple_newlines(text):
     return re.sub(r"\n{2,}", "\n", text)
 
 
-def clean_text(text):
+def clean_text(text: str) -> str:
     """
     Cleans the input text by applying a series of formatting fixes:
     - Merges hyphenated words split by line breaks.

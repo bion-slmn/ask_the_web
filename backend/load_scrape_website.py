@@ -5,15 +5,16 @@ from langchain_community.tools import DuckDuckGoSearchResults
 from .clean_data import clean_text
 
 
-def search_duckduckgo(query: str) -> list[str]:
+def search_duckduckgo(query: str) -> list[dict]:
     """
-    Search DuckDuckGo for a given query and return a list of result URLs.
+    Search DuckDuckGo for a given query and return a list of result of
+    dictionaries containing title, link and snipppet.
 
     Args:
         query (str): The search query.
 
     Returns:
-        list[str]: A list from the search results.
+        list[dict]: A list from the search results .
     """
     search = DuckDuckGoSearchResults(output_format='list')
     results = search.invoke(query)
@@ -22,7 +23,7 @@ def search_duckduckgo(query: str) -> list[str]:
 
 def load_website_content(link: str) -> list[Document]:
     """
-    Load website content from URLs returned by a DuckDuckGo search.
+    download website content from a url.
 
     Args:
         query (str): The link of the website to load.

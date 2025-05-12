@@ -13,7 +13,7 @@ os.environ['USER_AGENT'] = os.getenv(
 console = Console()
 
 
-def ask_the_web(query: str) -> None:
+def ask_the_web(query: str) -> tuple[str, dict, str]:
     """
     Ask a question to the graph-based QA system and
     display the markdown-formatted response.
