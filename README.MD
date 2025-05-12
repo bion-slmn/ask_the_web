@@ -21,7 +21,7 @@ A Streamlit app that takes a user's question, retrieves web content, and answers
 
 ```bash
 git clone https://github.com/bion-slmn/ask_the_web.git
-cd ask-the-web-assistant
+cd ask_the_web
 pip install -r requirements.txt
 streamlit run app.py
 ````
