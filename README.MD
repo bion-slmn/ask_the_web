@@ -1,22 +1,23 @@
-Here’s a concise one-page `README.md` that includes:
 
-* Setup instructions
-* How the app works
-* The architecture diagram (image-based)
-* The LLM prompt used
-* One-sentence rationale
-* Known limitations
-
----
-
-````markdown
 # 🧠 Ask the Web Assistant
 
-Ask the Web Assistant is a Streamlit-based app that takes a user question, retrieves relevant web content, and returns a verified answer using an LLM-powered pipeline.
+A Streamlit app that takes a user's question, retrieves web content, and answers using a verified LLM pipeline powered by LangGraph and Gemini 2.0 Flash.
 
 ---
 
-## 🔧 Setup
+## ⚙️ Workflow
+
+1. **User asks a question**
+2. 🔎 `get_links` – Searches DuckDuckGo for relevant pages  
+3. 🧽 `scrape_web_data` – Loads and cleans page content  
+4. 🧠 `generate_answer` – LLM answers using processed data  
+5. ✅ `verify_citations` – Ensures answer cites real sources  
+6. 🖥️ Streamlit UI displays answer and debug data  
+7. 📊 Optional telemetry is recorded
+
+---
+
+## 🚀 Quick Start
 
 ```bash
 git clone https://github.com/your-repo/ask-the-web-assistant.git
@@ -25,49 +26,39 @@ pip install -r requirements.txt
 streamlit run app.py
 ````
 
-> Make sure your environment includes access to the required API keys as shown in .env.example.
+Or using Docker:
 
----
-
-## ⚙️ How It Works
-
-1. **User enters a question**
-2. **get\_links**: fetches relevant URLs
-3. **scrape\_web\_data**: downloads and parses content from links
-4. **generate\_answer**: LLM generates an answer based on scraped data
-5. **verify\_citations**: ensures information is traceable
-6. **Answer and debug info are displayed**
-7. **Telemetry is recorded (optional)**
-
----
-
-## 🗺️ Architecture
-
-![The flow of the graph](image.png)
-
-
----
-
-## 💬 Prompt(s) Used
-
-* **Prompt**: `"You are a helpful assistant. Based on the following content, answer the user's question truthfully and cite the source."`
-* **Rationale**: Ensures the LLM grounds answers in retrieved data with verifiable citations.
-
----
-
-## ⚠️ Known Limitations
-
-* Citation verification is heuristic-based and not foolproof.
-* Web scraping may fail on pages with anti-bot mechanisms.
-* LLMs may still hallucinate if input context is low-quality or off-topic.
-
----
-
-📬 Feedback or contributions welcome!
-
+```bash
+docker build -t ask-web . && docker run -p 8501:8501 ask-web
 ```
 
+> ⚠️ Ensure your `.env` has required API keys. See `.env.example`.
+
 ---
 
-Would you like a version with an ASCII diagram in case image rendering fails on GitHub?
-```
+## 🧱 Architecture
+
+![Flow diagram](image.png)
+
+*LangGraph manages stateful steps like scraping, generating, and verifying.*
+
+---
+
+## 📝 Prompt
+
+**Instruction to LLM**:
+*"You are a helpful assistant. Based on the following content, answer the user's question truthfully and cite the source."*
+
+*This prompt keeps answers grounded and traceable.*
+
+---
+
+## ⚠️ Limitations
+
+* Citation checks are heuristic, not guaranteed
+* Some sites block scraping
+* LLMs may hallucinate if context is poor
+
+---
+
+
