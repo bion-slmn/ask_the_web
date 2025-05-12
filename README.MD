@@ -20,7 +20,7 @@ A Streamlit app that takes a user's question, retrieves web content, and answers
 ## 🚀 Quick Start
 
 ```bash
-git clone https://github.com/your-repo/ask-the-web-assistant.git
+git clone https://github.com/bion-slmn/ask_the_web.git
 cd ask-the-web-assistant
 pip install -r requirements.txt
 streamlit run app.py
