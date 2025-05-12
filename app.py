@@ -79,17 +79,14 @@ def process_query(
 
             if chunk.get('status'):
                 status = chunk['status']
-                status_box.markdown("### 📜 Status")
-                status_box.markdown(status)
+                
 
             if chunk.get('raw_results') and not debug_data:
                 debug_data.append(chunk['raw_results'])
 
-    # Show debug info after stream completes
     with debug_container.expander("🔍 Debug Info", expanded=False):
         st.markdown("#### Raw Search Results (JSON)")
         for i, data in enumerate(debug_data, 1):
-            st.markdown(f"**Chunk {i}**")
             st.json(data)
 
     return answer_text, usage_metadata, status
