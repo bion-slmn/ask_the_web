@@ -5,7 +5,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 
-def load_llm() -> None:
+def load_llm() -> ChatGoogleGenerativeAI:
     """
     Loads and returns a Google Generative AI language model (LLM) instance.
 
