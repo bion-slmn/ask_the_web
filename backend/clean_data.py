@@ -1,9 +1,11 @@
 import re
 
+
 def merge_hyphenated_words(text):
     """
-    Merges words that have been split across lines using a hyphen followed by a newline.
-    
+    Merges words that have been split across lines using a
+    hyphen followed by a newline.
+
     For example, 'multi-\nline' becomes 'multiline'.
 
     Args:
@@ -31,7 +33,7 @@ def fix_newlines(text):
 
 def remove_multiple_newlines(text):
     """
-    Reduces multiple consecutive newline characters to a single newline 
+    Reduces multiple consecutive newline characters to a single newline
     to normalize paragraph spacing.
 
     Args:
@@ -56,7 +58,10 @@ def clean_text(text):
     Returns:
         str: Cleaned and normalized text.
     """
-    cleaning_functions = [merge_hyphenated_words, fix_newlines, remove_multiple_newlines]
+    cleaning_functions = [
+        merge_hyphenated_words,
+        fix_newlines,
+        remove_multiple_newlines]
     for cleaning_function in cleaning_functions:
         text = cleaning_function(text)
     return text

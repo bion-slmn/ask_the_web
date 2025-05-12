@@ -11,7 +11,8 @@ def display_ui() -> str:
     Display the Streamlit UI elements for user interaction.
 
     Returns:
-        str: The user's input query string, or an empty string if no query was submitted.
+        str: The user's input query string, or an empty string
+          if no query was submitted.
     """
     st.title("📚 Ask the Web Assistant")
     query = st.text_input("Ask a question:")
@@ -21,15 +22,19 @@ def display_ui() -> str:
     return ""
 
 
-def init_placeholders() -> Tuple[st.delta_generator.DeltaGenerator, st.delta_generator.DeltaGenerator, st.delta_generator.DeltaGenerator]:
+def init_placeholders() -> Tuple[st.delta_generator.DeltaGenerator,
+                                 st.delta_generator.DeltaGenerator,
+                                 st.delta_generator.DeltaGenerator]:
     """
-    Initialize the placeholder elements for displaying the answer, status, and debug information.
+    Initialize the placeholder elements for displaying the answer,
+    status, and debug information.
 
     Returns:
         Tuple: A tuple containing:
             - answer_box (DeltaGenerator): A placeholder for the answer.
             - status_box (DeltaGenerator): A placeholder for the status.
-            - debug_container (DeltaGenerator): A container for expandable debug info.
+            - debug_container (DeltaGenerator): A container for expandable
+            debug info.
     """
     answer_box = st.empty()
     status_box = st.empty()
@@ -45,17 +50,20 @@ def process_query(
     debug_container: st.delta_generator.DeltaGenerator
 ) -> Tuple[str, Dict[str, Any], str]:
     """
-    Processes the user's query by streaming chunks from the backend graph and updating UI components.
+    Processes the user's query by streaming chunks from the backend
+    graph and updating UI components.
 
     Args:
         query (str): The user's question.
         graph (Any): The graph object capable of streaming responses.
         answer_box (DeltaGenerator): Placeholder to display the answer.
         status_box (DeltaGenerator): Placeholder to display the status.
-        debug_container (DeltaGenerator): Container to show expandable debug info.
+        debug_container (DeltaGenerator): Container to show expandable
+        debug info.
 
     Returns:
-        Tuple[str, dict, str]: The final answer text, usage metadata, and status string.
+        Tuple[str, dict, str]: The final answer text, usage metadata,
+        and status string.
     """
     answer_text = ''
     usage_metadata = {}
@@ -89,7 +97,8 @@ def process_query(
 
 def main() -> None:
     """
-    The main entry point for the Streamlit app. Orchestrates UI setup, query processing, and telemetry updates.
+    The main entry point for the Streamlit app. Orchestrates UI setup,
+      query processing, and telemetry updates.
     """
     query = display_ui()
     if query:
@@ -98,7 +107,8 @@ def main() -> None:
         answer_box, status_box, debug_section = init_placeholders()
 
         try:
-            answer_text, usage_metadata, status = process_query(query, graph, answer_box, status_box, debug_section)
+            answer_text, usage_metadata, status = process_query(
+                query, graph, answer_box, status_box, debug_section)
         except Exception as e:
             st.error(f"❌ An error occurred: {e}")
             return

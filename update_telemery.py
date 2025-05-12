@@ -2,22 +2,28 @@ import streamlit as st
 import time
 from typing import Dict
 
-def update_telemetry(start_time: float, usage_metadata: Dict[str, int]) -> None:
-    """
-    Updates the telemetry information in the Streamlit sidebar, including the latency and token usage.
 
-    This function calculates the total latency by measuring the time elapsed since the start of the query. 
-    It also extracts and displays token usage details such as input tokens, output tokens, and total tokens.
+def update_telemetry(
+        start_time: float, usage_metadata: Dict[str, int]) -> None:
+    """
+    Updates the telemetry information in the Streamlit sidebar,
+      including the latency and token usage.
+
+    This function calculates the total latency by measuring
+    the time elapsed since the start of the query.
+    It also extracts and displays token usage details such as
+    input tokens, output tokens, and total tokens.
 
     Args:
-        start_time (float): The time when the query was initiated (in seconds).
-        usage_metadata (Dict[str, int]): A dictionary containing token usage data. It should include:
-            - "input_tokens" (int): The number of tokens used for the input prompt.
-            - "output_tokens" (int): The number of tokens generated in the response.
-            - "total_tokens" (int): The total number of tokens (input + output).
+        start_time (float): The time when the query was initiated.
+        usage_metadata (Dict[str, int]): A dict containing token usage with:
+            - "input_tokens" (int)
+            - "output_tokens" (int)
+            - "total_tokens" (int)
 
     Returns:
-        None: This function does not return any value. It updates the Streamlit sidebar with telemetry data.
+        None: This function does not return any value.
+        It updates the Streamlit sidebar with telemetry data.
     """
     latency = round(time.time() - start_time, 2)
 
