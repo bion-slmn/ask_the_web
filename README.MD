@@ -58,6 +58,7 @@ docker build -t ask-web . && docker run -p 8501:8501 ask-web
 * Citation checks are heuristic, not guaranteed
 * Some sites block scraping
 * LLMs may hallucinate if context is poor
+* Too many request can result in failure to fetch results from DuckDuckGo do to ratelimitting
 
 ---
 
